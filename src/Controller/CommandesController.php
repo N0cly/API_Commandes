@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -24,6 +25,18 @@ class CommandesController extends AbstractController
     {
         $commandes = $this->commandesService->getAll();
         return $this->json($commandes);
+    }
+
+    // add commande
+    #[Route('/add', name:'add_commande', methods: ['GET'])]
+    public function add(Request $resquest): JsonResponse
+    {
+        $user_id = $resquest->request->get('user_id', null);
+        $plats_id = $resquest->request->get('plats_id', null);
+        $date = date('d/m/Y');
+        $paiement = $resquest->request->get('paiement', null);
+        $prix = $resquest->request->get('prix', null);
+        return new JsonResponse($this->commandesService->add($user_id, $plats_id, $date, $paiement, $prix));
     }
 
 
