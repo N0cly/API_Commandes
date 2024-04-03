@@ -17,17 +17,18 @@ class Commandes
     #[ORM\Column]
     private ?int $user_id = null;
 
-    #[ORM\Column(type: Types::ARRAY)]
-    private array $plats_id = [];
+    #[ORM\Column]
+    private ?int $menu_id = null;
 
     #[ORM\Column(length: 255)]
     private ?string $date = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column()]
     private ?string $paiement = null;
 
-    #[ORM\Column]
-    private ?float $prix = null;
+    #[ORM\Column(length: 255)]
+    private ?string $status = null;
+
 
     public function getId(): ?int
     {
@@ -46,17 +47,18 @@ class Commandes
         return $this;
     }
 
-    public function getPlatsId(): array
+    public function getMenuId(): ?int
     {
-        return $this->plats_id;
+        return $this->menu_id;
     }
 
-    public function setPlatsId(array $plats_id): static
+    public function setMenuId(int $menu_id): static
     {
-        $this->plats_id = $plats_id;
+        $this->$menu_id = $menu_id;
 
         return $this;
     }
+
 
     public function getDate(): ?string
     {
@@ -82,15 +84,16 @@ class Commandes
         return $this;
     }
 
-    public function getPrix(): ?float
+    public function getStatus(): ?string
     {
-        return $this->prix;
+        return $this->status;
     }
 
-    public function setPrix(float $prix): static
+    public function setStatus(string $status): static
     {
-        $this->prix = $prix;
+        $this->status = $status;
 
         return $this;
     }
+
 }

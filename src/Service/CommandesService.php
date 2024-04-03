@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Entity\Commandes;
 use App\Repository\CommandesRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -27,56 +26,60 @@ class CommandesService
             $data[] = [
                 'commande_id' => $commande->getId(),
                 'user' => $commande->getUserId(),
-                'plats' => $commande->getPlatsId(),
+                'menu' => $commande->getMenuId(),
+                'status' => $commande->getStatus(),
                 'date' => $commande->getDate(),
                 'paiement' => $commande->getPaiement(),
-                'prix' => $commande->getPrix()
             ];
         }
         return $data;
     }
 
-    public function add($user_id, $plats_id, $date, $paiement, $prix): array
+    public function add(int $menu, int $user, string $paiement): array
     {
         $commande = new Commandes();
-        $commande->setUserId(1);
-        $commande->setPlatsId([
-            1,
-            2,
-            3
-        ]);
+        $commande->setMenuId($menu);
+        $commande->setUserId($user);
+        $commande->setStatus('En attente');
         $commande->setDate(date('d/m/Y'));
-        $commande->setPaiement('CB');
-        $commande->setPrix(25.50);
-        $this->entityManager->persist($commande);
-        $this->entityManager->flush();
-        return [
-            'commande_id' => $commande->getId(),
-            'user' => $commande->getUserId(),
-            'plats' => $commande->getPlatsId(),
-            'date' => $commande->getDate(),
-            'paiement' => $commande->getPaiement(),
-            'prix' => $commande->getPrix()
-        ];
-
-        /*$commande = new Commandes();
-        $commande->setUserId($user_id);
-        $commande->setPlatsId($plats_id);
-        $commande->setDate($date);
         $commande->setPaiement($paiement);
-        $commande->setPrix($prix);
         $this->entityManager->persist($commande);
         $this->entityManager->flush();
         return [
             'commande_id' => $commande->getId(),
             'user' => $commande->getUserId(),
-            'plats' => $commande->getPlatsId(),
+            'menu' => $commande->getMenuId(),
             'date' => $commande->getDate(),
             'paiement' => $commande->getPaiement(),
-            'prix' => $commande->getPrix()
-        ];*/
-
-
+        ];
     }
+
+    public function update(int $id, ?int $menu, ?int $user, ?string $status, ?string $paiement)
+    {
+        $commande = $this->repository->find($id);
+
+        if ($menu) {
+            $commande->setMenuId($menu);
+        }
+        if ($user) {
+            $commande->setUserId($user);
+        }
+        if ($status) {
+            $commande->setStatus($status);
+        }
+        if ($paiement) {
+            $commande->setPaiement($paiement);
+        }
+        $this->entityManager->flush();
+        return [
+            'commande_id' => $commande->getId(),
+            'user' => $commande->getUserId(),
+            'menu' => $commande->getMenuId(),
+            'status' => $commande->getStatus(),
+            'date' => $commande->getDate(),
+            'paiement' => $commande->getPaiement(),
+        ];
+    }
+
 
 }
