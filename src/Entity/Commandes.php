@@ -23,10 +23,10 @@ class Commandes
     private ?string $date = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $paiement = null;
+    private ?int $paiement = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $status = null;
+    private ?int $status = null;
 
     public function getId(): ?int
     {
@@ -78,10 +78,18 @@ class Commandes
 
     public function getPaiement(): ?string
     {
-        return $this->paiement;
+        // return paiement with number
+        return match ($this->paiement) {
+            1 => 'Carte bancaire',
+            2 => 'Paypal',
+            3 => 'Espèce',
+            4 => 'Apple Pay',
+            5 => 'Google Pay',
+            default => 'Paiement not found',
+        };
     }
 
-    public function setPaiement(string $paiement): static
+    public function setPaiement(int $paiement): static
     {
         $this->paiement = $paiement;
 
@@ -90,10 +98,17 @@ class Commandes
 
     public function getStatus(): ?string
     {
-        return $this->status;
+        // return status with number
+        return match ($this->status) {
+            1 => 'En attente',
+            2 => 'En cours',
+            3 => 'Terminé',
+            4 => 'Annulé',
+            default => 'Status not found',
+        };
     }
 
-    public function setStatus(string $status): static
+    public function setStatus(int $status): static
     {
         $this->status = $status;
 

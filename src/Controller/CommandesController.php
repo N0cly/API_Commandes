@@ -23,12 +23,18 @@ class CommandesController extends AbstractController
     #[Route('/', name:'get_all_commandes', methods: ['GET'])]
     public function getAll(): JsonResponse
     {
-        $commandes = $this->commandesService->getAll();
-        return $this->json($commandes);
+        return new JsonResponse($this->commandesService->getAll());
+    }
+    
+    // affiche une commande
+    #[Route('/{id}', name:'get_commande', methods: ['GET'])]
+    public function getCommande(int $id): JsonResponse
+    {
+        return new JsonResponse($this->commandesService->getCommande($id));
     }
 
     // add commandes
-    #[Route('/add', name:'add_commandes', methods: ['POST'])]
+    #[Route('/', name:'add_commandes', methods: ['POST'])]
     public function add(Request $request): JsonResponse
     {
         $jsonString = $request->getContent();
@@ -36,29 +42,73 @@ class CommandesController extends AbstractController
         // Décoder la chaîne JSON en un tableau associatif PHP
         $data = json_decode($jsonString, true);
 
-        $commandes = $this->commandesService->add($data['menu_id'], $data['user_id'], $data['paiement']);
-        return $this->json($commandes);
+        return new JsonResponse($this->commandesService->add($data['menu_id'], $data['user_id'], $data['paiement']));
     }
 
     // update commandes
-    #[Route('/update/{id}', name:'update_commandes', methods: ['POST'])]
+    #[Route('/{id}', name:'update_commandes', methods: ['PUT'])]
     public function update(Request $request, int $id): JsonResponse
     {
-
         $jsonString = $request->getContent();
 
         // Décoder la chaîne JSON en un tableau associatif PHP
         $data = json_decode($jsonString, true);
 
-        $menu = $data['menu_id'];
-        $user = $data['user_id'];
-        $status = $data['status'];
-        $paiement = $data['paiement'];
+        $menu = $data['menu_id'] ?? null;
+        $user = $data['user_id'] ?? null;
+        $status = $data['status'] ?? null;
+        $paiement = $data['paiement'] ?? null;
 
-        var_dump($data);
+        return new JsonResponse($this->commandesService->update($id, $menu, $user, $status, $paiement));
+    }
 
-        $commandes = $this->commandesService->update($id, $menu, $user, $status, $paiement);
-        return $this->json($commandes);
+    // delete commandes
+    #[Route('/{id}', name:'delete_commandes', methods: ['DELETE'])]
+    public function delete(int $id): JsonResponse
+    {
+        return new JsonResponse($this->commandesService->deleteCommande($id));
+    }
+
+    // get commandes by user
+    #[Route('/user/{id}', name:'get_commandes_by_user', methods: ['GET'])]
+    public function getCommandesByUser(int $id): JsonResponse
+    {
+        return new JsonResponse($this->commandesService->getCommandesByUser($id));
+    }
+
+    // get commandes by menu
+    #[Route('/menu/{id}', name:'get_commandes_by_menu', methods: ['GET'])]
+    public function getCommandesByMenu(int $id): JsonResponse
+    {
+        return new JsonResponse($this->commandesService->getCommandesByMenu($id));
+    }
+
+    //get commandes by status
+    #[Route('/status/{status}', name:'get_commandes_by_status', methods: ['GET'])]
+    public function getCommandesByStatus(string $status): JsonResponse
+    {
+        return new JsonResponse($this->commandesService->getCommandesByStatus($status));
+    }
+
+    // get commandes by date
+    #[Route('/date', name:'get_commandes_by_date', methods: ['POST'])]
+    public function getCommandesByDate(Request $request): JsonResponse
+
+    {
+        $jsonString = $request->getContent();
+
+        // Décoder la chaîne JSON en un tableau associatif PHP
+        $data = json_decode($jsonString, true);
+
+        $date = $data['date'] ?? null;
+        return new JsonResponse($this->commandesService->getCommandesByDate($date));
+    }
+
+    // get commandes by paiement
+    #[Route('/paiement/{paiement}', name:'get_commandes_by_paiement', methods: ['GET'])]
+    public function getCommandesByPaiement(string $paiement): JsonResponse
+    {
+        return new JsonResponse($this->commandesService->getCommandesByPaiement($paiement));
     }
 
 
