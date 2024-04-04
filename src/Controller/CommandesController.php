@@ -31,24 +31,31 @@ class CommandesController extends AbstractController
     #[Route('/add', name:'add_commandes', methods: ['POST'])]
     public function add(Request $request): JsonResponse
     {
-        $menu = $request->request->get('menu_id', false);
-        $user = $request->request->get('user_id',false);
-        $paiement = $request->request->get('paiement',false);
+        $jsonString = $request->getContent();
 
-        var_dump($menu);
+        // Décoder la chaîne JSON en un tableau associatif PHP
+        $data = json_decode($jsonString, true);
 
-        $commandes = $this->commandesService->add($menu, $user, $paiement);
+        $commandes = $this->commandesService->add($data['menu_id'], $data['user_id'], $data['paiement']);
         return $this->json($commandes);
     }
 
     // update commandes
-    #[Route('/update/{id}', name:'update_commandes', methods: ['PUT'])]
+    #[Route('/update/{id}', name:'update_commandes', methods: ['POST'])]
     public function update(Request $request, int $id): JsonResponse
     {
-        $menu = $request->request->get('menu_id',false);
-        $user = $request->request->get('user_id',false);
-        $status = $request->request->get('status',false);
-        $paiement = $request->request->get('paiement',false);
+
+        $jsonString = $request->getContent();
+
+        // Décoder la chaîne JSON en un tableau associatif PHP
+        $data = json_decode($jsonString, true);
+
+        $menu = $data['menu_id'];
+        $user = $data['user_id'];
+        $status = $data['status'];
+        $paiement = $data['paiement'];
+
+        var_dump($data);
 
         $commandes = $this->commandesService->update($id, $menu, $user, $status, $paiement);
         return $this->json($commandes);

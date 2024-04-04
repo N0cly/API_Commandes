@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\CommandesRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: CommandesRepository::class)]
@@ -23,16 +22,22 @@ class Commandes
     #[ORM\Column(length: 255)]
     private ?string $date = null;
 
-    #[ORM\Column()]
+    #[ORM\Column(length: 255)]
     private ?string $paiement = null;
 
     #[ORM\Column(length: 255)]
     private ?string $status = null;
 
-
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function setId(int $id): static
+    {
+        $this->id = $id;
+
+        return $this;
     }
 
     public function getUserId(): ?int
@@ -54,11 +59,10 @@ class Commandes
 
     public function setMenuId(int $menu_id): static
     {
-        $this->$menu_id = $menu_id;
+        $this->menu_id = $menu_id;
 
         return $this;
     }
-
 
     public function getDate(): ?string
     {
@@ -95,5 +99,4 @@ class Commandes
 
         return $this;
     }
-
 }
